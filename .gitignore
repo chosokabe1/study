@@ -1,0 +1,11 @@
+data/
+.sen/
+runs/
+yolov5/
+御分類/
+docu/
+finetuning/
+high/
+thinning/
+thread/
+結果/
