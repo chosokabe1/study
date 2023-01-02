@@ -38,22 +38,6 @@ def anaume(img):
   anaume_img = cv2.bitwise_or(th_clean, th_clean_not_clean)
   return anaume_img
 
-def output_width(img_path):
-  img = cv2.imread(img_path)
-  anaume_img = anaume(img)
-  # skeleton_img = cv2.ximgproc.thinning(anaume_img, thinningType=cv2.ximgproc.THINNING_GUOHALL)
-  # cv2.imwrite(os.path.join('data/221221_autodetect/anaume', os.path.splitext(os.path.basename(img_path))[0] + '_skeleton.bmp'), skeleton_img)
-  dist = cv2.distanceTransform(anaume_img, cv2.DIST_L2, 5)
-  max_distance = np.amax(dist)
-  # print(f'test{max_distance}')
-  output_width = max_distance * 2
-  return output_width
-def output_area(img_path):
-  img = cv2.imread(img_path)
-  anaume_img = anaume(img)
-  cv2.imwrite(os.path.join('data/221221_autodetect/anaume',os.path.basename(img_path)), anaume_img)
-  output_area = np.count_nonzero(anaume_img)
-  return output_area
 def output_probability_of_having_egg(img_path):
   output = 0.99999
   return output
@@ -65,6 +49,9 @@ def output_probability_of_several(img_path):
   return output
 
 def output_life_judge(img1_path, img2_path):
+  img1 = cv2.imread(img1_path)
+  img2 = cv2.imread(img2_path)
+  anaume
   output = "TRUE or FALSE"
   return output
 
@@ -83,23 +70,32 @@ for file_path in glob.glob(os.path.join(args.file_path, "*")):
   img_paths.append(file_path)
 
 for i in range(0, number_of_organism * number_of_flame, number_of_flame):
+  img1 = cv2.imread(img_paths[i])
+  img2 = cv2.imread(img_paths[i+1])
+  anaume_img1 = anaume(img1)
+  anaume_img2 = anaume(img2)
 
   probability_of_having_egg = output_probability_of_having_egg(img_paths[i])
   print(probability_of_having_egg)
 
-  overall_length = output_overall_length(img_paths[i])
+  overall_length = output_overall_length(anaume_img1)
   print(overall_length)
 
-  width = output_width(img_paths[i])
+  dist = cv2.distanceTransform(anaume_img1, cv2.DIST_L2, 5)
+  max_distance = np.amax(dist)
+  width = max_distance * 2
   print(width)
 
-  area = output_area(img_paths[i])
+  area = np.count_nonzero(anaume_img1)
   print(area)
 
-  probability_of_several = output_probability_of_several(img_paths[i])
+  probability_of_several = output_probability_of_several(anaume_img1)
   print(probability_of_several)
 
-  life_judge = output_life_judge(img_paths[i], img_paths[i+1])
+  bitwise_xor = cv2.bitwise_xor(anaume_img1, anaume_img2)
+  cv2.imwrite(os.path.join(R"C:\ex\sen\data\221221_autodetect\xor", os.path.basename(img_paths[i])), bitwise_xor)
+  life_judge = False
+  life_judge = True if np.count_nonzero(bitwise_xor == 255) > 10 else False
   print(life_judge)
 
 
